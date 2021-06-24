@@ -5,7 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "location_table")
-class Cell(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+@Entity
+data class Cell(
+
+    @PrimaryKey(autoGenerate = false) val cid: Int? = null,
+    val lac_tac: String,
+    val rac: String,
+    val plmn: String,
 )
