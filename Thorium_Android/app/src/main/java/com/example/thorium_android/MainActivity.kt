@@ -101,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         var mcc: String = ""
         var mnc: String = ""
         var lac: String = ""
+        var arfcn: String = ""
         var cell_type: String = ""
 
         val infos = tm.allCellInfo
@@ -121,6 +122,7 @@ class MainActivity : AppCompatActivity() {
                 mcc = cellIdentityGsm.mccString.toString()
                 mnc = cellIdentityGsm.mncString.toString()
                 lac = cellIdentityGsm.lac.toString()
+                arfcn = cellIdentityGsm.getArfcn().toString()
                 cell_type = "GSM"
             }
             if (cellInfo is CellInfoWcdma) {
@@ -129,6 +131,7 @@ class MainActivity : AppCompatActivity() {
                 mcc = cellIdentityWcdma.mccString.toString()
                 mnc = cellIdentityWcdma.mncString.toString()
                 lac = cellIdentityWcdma.lac.toString()
+                arfcn = cellIdentityWcdma.uarfcn.toString()
                 cell_type = "UMTS"
             }
             if (cellInfo is CellInfoLte) {
@@ -137,6 +140,7 @@ class MainActivity : AppCompatActivity() {
                 mcc = cellIdentityLte.mccString.toString()
                 mnc = cellIdentityLte.mncString.toString()
                 lac = cellIdentityLte.tac.toString()
+                arfcn = cellIdentityLte.earfcn.toString()
                 cell_type = "LTE"
             }
         }
