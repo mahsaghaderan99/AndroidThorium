@@ -145,18 +145,19 @@ class MainActivity : AppCompatActivity() {
         }
         finally {
             requestNewLocationData()
-//            if (current_location != null)
-//            {
-//                //save info
-//            }
+            if (current_location != null)
+            {
+//                Log.d("ADebugTag", "longitude Value: " + current_location!!.longitude);
+//                Log.d("ADebugTag", "latitude Value: " + current_location!!.latitude);
+                //save info
+            }
         }
-        Log.d("ADebugTag", "cid Value: " + cid);
-        Log.d("ADebugTag", "mcc Value: " + mcc);
-        Log.d("ADebugTag", "mnc Value: " + mnc);
-        Log.d("ADebugTag", "lac Value: " + lac);
-        Log.d("ADebugTag", "cell_type Value: " + cell_type);
-        Log.d("ADebugTag", "longitude Value: " + current_location!!.longitude);
-        Log.d("ADebugTag", "latitude Value: " + current_location!!.latitude);
+//        Log.d("ADebugTag", "cid Value: " + cid);
+//        Log.d("ADebugTag", "mcc Value: " + mcc);
+//        Log.d("ADebugTag", "mnc Value: " + mnc);
+//        Log.d("ADebugTag", "lac Value: " + lac);
+//        Log.d("ADebugTag", "cell_type Value: " + cell_type);
+
 
     }
     @SuppressLint("MissingPermission")
