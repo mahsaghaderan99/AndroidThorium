@@ -1,20 +1,19 @@
-package com.example.thorium.view_models
+package com.example.thorium_android.view_models
 
 import android.app.Application
-import android.icu.util.LocaleData
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.thorium.LocationDatabase
-import com.example.thorium.entities.Cell
-import com.example.thorium.entities.Location
-import com.example.thorium.repositories.LocationRepository
+import com.example.thorium_android.entities.Cell
+import com.example.thorium_android.entities.LocData
+import com.example.thorium_android.repositories.LocationRepository
+import com.example.thorium_android.LocationDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LocationViewModel(application: Application): AndroidViewModel(application) {
 
-    private val allLocations: LiveData<List<Location>>
+    private val allLocations: LiveData<List<LocData>>
     private val repository: LocationRepository
 
     init {
@@ -23,9 +22,9 @@ class LocationViewModel(application: Application): AndroidViewModel(application)
         allLocations = repository.allLocations
     }
 
-    fun addLocation(location: Location){
+    fun addLocation(locData: LocData){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addLocation(location)
+            repository.addLocation(locData)
         }
     }
 

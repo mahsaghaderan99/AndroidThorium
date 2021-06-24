@@ -1,17 +1,16 @@
 package com.example.thorium_android
 
 import android.content.Context
-import android.icu.util.LocaleData
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.thorium.entities.Cell
-import com.example.thorium.entities.Location
-import com.example.thorium.entities.LocationDao
+import com.example.thorium_android.entities.Cell
+import com.example.thorium_android.entities.LocData
+import com.example.thorium_android.entities.LocationDao
 
 @Database(
     entities = [
-        Location::class,
+        LocData::class,
         Cell::class
     ],
     version = 1

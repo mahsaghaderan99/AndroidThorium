@@ -1,17 +1,17 @@
-package com.example.thorium.entities.relations
+package com.example.thorium_android.entities.relations
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.thorium.entities.Cell
-import com.example.thorium.entities.Location
+import com.example.thorium_android.entities.Cell
+import com.example.thorium_android.entities.LocData
 
 data class CellWithLocations(
 
     @Embedded val cell: Cell,
     @Relation(
         parentColumn = "cid",
-        entityColumn = "id"
+        entityColumn = "cellId"
     )
-    val locations:  List<Location>
+    val locData:  List<LocData>
 ) {
 }

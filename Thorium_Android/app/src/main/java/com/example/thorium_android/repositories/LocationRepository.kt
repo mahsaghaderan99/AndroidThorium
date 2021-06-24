@@ -1,14 +1,14 @@
-package com.example.thorium.repositories
+package com.example.thorium_android.repositories
 
 import androidx.lifecycle.LiveData
-import com.example.thorium.entities.Cell
-import com.example.thorium.entities.Location
-import com.example.thorium.entities.LocationDao
-import com.example.thorium.entities.relations.CellWithLocations
+import com.example.thorium_android.entities.Cell
+import com.example.thorium_android.entities.LocData
+import com.example.thorium_android.entities.LocationDao
+import com.example.thorium_android.entities.relations.CellWithLocations
 
 class LocationRepository(private val locationDao: LocationDao) {
 
-    val allLocations: LiveData<List<Location>> = locationDao.getAllLocations()
+    val allLocations: LiveData<List<LocData>> = locationDao.getAllLocations()
 
     suspend fun getCellByCid(cid: Int): LiveData<List<Cell>>
     {
@@ -20,9 +20,9 @@ class LocationRepository(private val locationDao: LocationDao) {
         return locationDao.getCellWithLocations(cid)
     }
 
-    suspend fun addLocation(location: Location)
+    suspend fun addLocation(locData: LocData)
     {
-        locationDao.insertLocation(location)
+        locationDao.insertLocation(locData)
     }
 
     suspend fun addCell(cell: Cell)

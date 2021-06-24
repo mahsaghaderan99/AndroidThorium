@@ -11,15 +11,18 @@ import android.os.Handler
 import android.os.Looper
 import android.telephony.*
 import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.gms.location.*
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
+import com.example.thorium_android.entities.Cell
+import com.example.thorium_android.entities.LocData
+import com.example.thorium_android.view_models.LocationViewModel
 
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -29,12 +32,16 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class MainActivity : AppCompatActivity() {
 
+
+    private lateinit var locationViewModel: LocationViewModel
     private var current_location: Location? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var scan_delay: Long = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
@@ -149,7 +156,16 @@ class MainActivity : AppCompatActivity() {
             {
 //                Log.d("ADebugTag", "longitude Value: " + current_location!!.longitude);
 //                Log.d("ADebugTag", "latitude Value: " + current_location!!.latitude);
-                //save info
+                val cellData = Cell(cid, lac, "-", mcc, mnc, cell_type)
+                val location = LocData(
+                    lat = current_location!!.latitude,
+                    long = current_location!!.longitude,
+                    cellId = cellData.cid,
+                    time = System.currentTimeMillis(),
+                )
+                locationViewModel.addCell(cellData)
+                locationViewModel.addLocation(location)
+
             }
         }
 //        Log.d("ADebugTag", "cid Value: " + cid);
