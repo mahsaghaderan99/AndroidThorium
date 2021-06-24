@@ -12,7 +12,7 @@ import com.example.thorium.repositories.LocationRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LocationViewModel(application: Application): AndroidViewModel {
+class LocationViewModel(application: Application): AndroidViewModel(application) {
 
     private val allLocations: LiveData<List<Location>>
     private val repository: LocationRepository
@@ -25,7 +25,7 @@ class LocationViewModel(application: Application): AndroidViewModel {
 
     fun addLocation(location: Location){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.allLocations(location)
+            repository.addLocation(location)
         }
     }
 
