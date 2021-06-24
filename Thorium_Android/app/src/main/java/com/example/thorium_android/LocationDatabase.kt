@@ -1,4 +1,4 @@
-package com.example.thorium
+package com.example.thorium_android
 
 import android.content.Context
 import android.icu.util.LocaleData
