@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.android.synthetic.main.trace_recyclerview_item.view.*
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -135,14 +136,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             val y = mutableEntry.value.get(index).location.longitude
             val pos = LatLng(x, y)
             val color = getColorz(index,mutableEntry.value.get(index).cell,coloring_method)
+            val thecell = mutableEntry.value.get(index)
+            val plmn = thecell.cell.mcc + thecell.cell.mnc
+            val lac = thecell.cell.lac_tac
+            val celtype = thecell.cell.cellType
 
-            val snip = "Cell: $cid"
-
+            val snip = "$celtype \n Cell: $cid \n PLMN $plmn \n LAC $lac"
+            Log.d("ADebugTag", "Befor new point adding");
             val marker = mMap.addMarker(MarkerOptions().icon(
                     BitmapDescriptorFactory.defaultMarker(color)).position(
                     pos).title(cid.toString()).snippet(snip))
-
+            Log.d("ADebugTag", "After marker adding");
             activeMarkers.add(marker)
+            Log.d("ADebugTag", "After new point adding");
         }
     }
 
