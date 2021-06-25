@@ -57,35 +57,33 @@ class MainActivity : AppCompatActivity() {
         isLocationEnabled()
         val trace_bottun = findViewById<Button>(R.id.button_trace)
         val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        trace_bottun.setOnClickListener {
-            it.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.READ_PHONE_STATE,
-                            Manifest.permission.ACCESS_NETWORK_STATE,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    ).withListener(object : MultiplePermissionsListener {
-                        override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+        Dexter.withContext(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ).withListener(object : MultiplePermissionsListener {
+                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
 
-                            val mainHandler = Handler(Looper.getMainLooper())
+                        val mainHandler = Handler(Looper.getMainLooper())
 //
-                            mainHandler.post(object : Runnable {
-                                override fun run() {
-                                    getCellInfo(tm)
-                                    mainHandler.postDelayed(this, scan_delay)
-                                }
-                            })
-                        }
+                        mainHandler.post(object : Runnable {
+                            override fun run() {
+                                getCellInfo(tm)
+                                mainHandler.postDelayed(this, scan_delay)
+                            }
+                        })
+                    }
 
-                        override fun onPermissionRationaleShouldBeShown(
-                                permissions: List<PermissionRequest?>?,
-                                token: PermissionToken?
-                        ) {
-                        }
-                    }).check()
-        }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+                    override fun onPermissionRationaleShouldBeShown(
+                            permissions: List<PermissionRequest?>?,
+                            token: PermissionToken?
+                    ) {
+                    }
+                }).check()
+
+    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
     }
 
