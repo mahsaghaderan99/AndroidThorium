@@ -57,8 +57,5 @@ class SecondFragment : Fragment() {
             // adapter.notifyDataSetChanged()
         })
 
-        view.findViewById<Button>(R.id.button_second).setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-        }
     }
 }
