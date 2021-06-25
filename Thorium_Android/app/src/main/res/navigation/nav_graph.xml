@@ -25,4 +25,15 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="com.example.thorium_android.SecondFragment"
+        android:label="@string/map_fragment_label"
+        tools:layout="@layout/fragment_map">
+
+        <action
+            android:id="@+id/action_FisrtFragment_to_MapFragment"
+            app:destination="@id/MapFragment" />
+    </fragment>
 </navigation>
