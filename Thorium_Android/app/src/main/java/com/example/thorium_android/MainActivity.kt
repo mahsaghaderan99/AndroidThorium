@@ -12,8 +12,6 @@ import android.os.Handler
 import android.os.Looper
 import android.telephony.*
 import android.util.Log
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.gms.location.*
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
@@ -21,7 +19,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.example.thorium_android.entities.Cell
+import com.example.thorium_android.entities.LocData
+import com.example.thorium_android.view_models.LocationViewModel
 
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
@@ -31,12 +36,16 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 
 class MainActivity : AppCompatActivity() {
 
+
+    private lateinit var locationViewModel: LocationViewModel
     private var current_location: Location? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var scan_delay: Long = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
@@ -49,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         val trace_bottun = findViewById<Button>(R.id.button_trace)
         val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         trace_bottun.setOnClickListener {
+            it.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             Dexter.withContext(this)
                     .withPermissions(
                             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -155,8 +165,25 @@ class MainActivity : AppCompatActivity() {
             {
 //                Log.d("ADebugTag", "longitude Value: " + current_location!!.longitude);
 //                Log.d("ADebugTag", "latitude Value: " + current_location!!.latitude);
-                //save info
+                val cellData = Cell(
+                    cid = cid,
+                    lac_tac =  lac,
+                    mcc =  mcc,
+                    mnc =  mnc,
+                    arfcn = arfcn,
+                    cellType =  cell_type)
+                val location = LocData(
+                    id = null,
+                    latitude = current_location!!.latitude,
+                    longitude = current_location!!.longitude,
+                    cellId = cellData.cid,
+                    time = System.currentTimeMillis(),
+                )
+                locationViewModel.addCell(cellData)
+                locationViewModel.addLocation(location)
+
             }
+
         }
 //        Log.d("ADebugTag", "cid Value: " + cid);
 //        Log.d("ADebugTag", "mcc Value: " + mcc);
