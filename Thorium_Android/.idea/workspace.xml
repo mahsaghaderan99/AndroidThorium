@@ -28,18 +28,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b0718e84-670d-43f6-887a-6890840267de" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/navEditor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/navEditor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/thorium_android/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/thorium_android/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/thorium_android/SecondFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/thorium_android/SecondFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/nav_graph.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_second.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_second.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[RZ8M90YQT5A]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[ce041714296480df0d]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -184,22 +182,22 @@
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
     <state x="779" y="311" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1624638898974" />
-    <state width="1802" height="267" key="GridCell.Tab.0.bottom" timestamp="1624642214000">
+    <state width="1802" height="267" key="GridCell.Tab.0.bottom" timestamp="1624646964238">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1802" height="267" key="GridCell.Tab.0.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1624642214000" />
-    <state width="1802" height="267" key="GridCell.Tab.0.center" timestamp="1624642213999">
+    <state width="1802" height="267" key="GridCell.Tab.0.bottom/72.27.1848.1053@72.27.1848.1053" timestamp="1624646964238" />
+    <state width="1802" height="267" key="GridCell.Tab.0.center" timestamp="1624646964237">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1802" height="267" key="GridCell.Tab.0.center/72.27.1848.1053@72.27.1848.1053" timestamp="1624642213999" />
-    <state width="1802" height="267" key="GridCell.Tab.0.left" timestamp="1624642213999">
+    <state width="1802" height="267" key="GridCell.Tab.0.center/72.27.1848.1053@72.27.1848.1053" timestamp="1624646964237" />
+    <state width="1802" height="267" key="GridCell.Tab.0.left" timestamp="1624646964237">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1802" height="267" key="GridCell.Tab.0.left/72.27.1848.1053@72.27.1848.1053" timestamp="1624642213999" />
-    <state width="1802" height="267" key="GridCell.Tab.0.right" timestamp="1624642214000">
+    <state width="1802" height="267" key="GridCell.Tab.0.left/72.27.1848.1053@72.27.1848.1053" timestamp="1624646964237" />
+    <state width="1802" height="267" key="GridCell.Tab.0.right" timestamp="1624646964237">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state width="1802" height="267" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1624642214000" />
+    <state width="1802" height="267" key="GridCell.Tab.0.right/72.27.1848.1053@72.27.1848.1053" timestamp="1624646964237" />
     <state x="684" y="292" width="623" height="522" key="find.popup" timestamp="1624636817879">
       <screen x="72" y="27" width="1848" height="1053" />
     </state>
