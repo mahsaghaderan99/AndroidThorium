@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var locationViewModel: LocationViewModel
     private var current_location: Location? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var scan_delay: Long = 1000
+    private var scan_delay: Long = 1000 * 60
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
