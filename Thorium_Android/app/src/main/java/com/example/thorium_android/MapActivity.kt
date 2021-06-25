@@ -1,32 +1,20 @@
 package com.example.thorium_android
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.CellInfo
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.thorium_android.R
-import com.example.thorium_android.adapters.LocatopnListAdapter
 import com.example.thorium_android.entities.Cell
 import com.example.thorium_android.entities.LocData
 import com.example.thorium_android.view_models.LocationViewModel
-
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -34,8 +22,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.fragment_second.view.*
-import kotlinx.coroutines.yield
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -43,14 +29,33 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationViewModel: LocationViewModel
     private var activeMarkers = mutableListOf<Marker>()
     inner class NetCell(var cell: Cell, val location: LocData)
-    val color_map = mutableMapOf<Int, Int>()
+    var color_map = mutableMapOf<Int, Int>()
     var next_color : Int = 0
+    private val filters =
+        arrayOf("CID", "LAC/TAC", "Cell Type", "MCC", "MNC","PLMN", "ARFCN")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_map)
         locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+
+        val spinner: Spinner = findViewById(R.id.spinner)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, filters)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                color_map = mutableMapOf<Int, Int>()
+                showBaseStatioMarkers(spinner.selectedItem.toString())
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                color_map = mutableMapOf<Int, Int>()
+                showBaseStatioMarkers("CID")
+            }
+        }
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -151,7 +156,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (coloring_method == "CID"){
             param = cell.cid.toInt()
         }
-        if(coloring_method == "type"){
+        if(coloring_method == "Cell Type"){
             val cell_type = cell.cellType
             if(cell_type == "GSM"){//blue
                 return BitmapDescriptorFactory.HUE_BLUE
@@ -166,7 +171,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         else if(coloring_method=="PLMN"){
             param = (cell.mcc+cell.mnc).toInt()
         }
-        else if(coloring_method=="TAC"){
+        else if(coloring_method=="MNC"){
+            param = cell.mnc.toInt()
+        }
+        else if(coloring_method=="MCC"){
+            param = cell.mcc.toInt()
+        }
+        else if(coloring_method=="LAC/TAC"){
             param = cell.lac_tac.toInt()
         }
         else if (coloring_method == "ARFCN"){
