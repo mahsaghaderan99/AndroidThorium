@@ -11,6 +11,8 @@ import com.example.thorium_android.R
 import com.example.thorium_android.entities.Cell
 import com.example.thorium_android.entities.LocData
 import kotlinx.android.synthetic.main.trace_recyclerview_item.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LocatopnListAdapter :
     ListAdapter<Pair<LocData, Cell>, LocatopnListAdapter.MyViewHolder>(DiffUtil) {
@@ -30,13 +32,22 @@ class LocatopnListAdapter :
         val currentItem = currentList[position].first
         val cell = currentList[position].second
         holder.itemView.type.text = cell!!.cellType
-        holder.itemView.time.text = currentItem.time.toString()
-        holder.itemView.altitude.text = currentItem.latitude.toString()
-        holder.itemView.longitude.text = currentItem.longitude.toString()
-        holder.itemView.mcc.text = cell!!.mcc
-        holder.itemView.mnc.text = cell!!.mnc
-        holder.itemView.lac.text = cell!!.lac_tac
+        holder.itemView.time.text = getDate(currentItem.time, "dd/MM/yyyy hh:mm:ss.SSS")
+        holder.itemView.altitude.text = "Lat: " +  currentItem.latitude.toString()
+        holder.itemView.longitude.text = "Long: " + currentItem.longitude.toString()
+        holder.itemView.mcc.text = "MCC: " + cell!!.mcc
+        holder.itemView.mnc.text = "MNC: " + cell!!.mnc
+        holder.itemView.lac.text = "LAC/TAC: " + cell!!.lac_tac
         Log.d("Heey", "sdad");
+    }
+    fun getDate(milliSeconds: Long, dateFormat: String?): String? {
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat(dateFormat)
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.setTimeInMillis(milliSeconds)
+        return formatter.format(calendar.getTime())
     }
 }
 
