@@ -33,6 +33,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     var next_color : Int = 0
     private val filters =
         arrayOf("CID", "LAC/TAC", "Cell Type", "MCC", "MNC","PLMN", "ARFCN")
+    var color_method = "CID"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,13 +47,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         spinner.adapter = adapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                color_map = mutableMapOf<Int, Int>()
-                showBaseStatioMarkers(spinner.selectedItem.toString())
+                next_color = 0
+                color_map.clear()
+                color_method = spinner.selectedItem.toString()
+                Log.d("ADebugTag", "spinner.selectedItem.toString()");
+                showBaseStatioMarkers(color_method)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                color_map = mutableMapOf<Int, Int>()
-                showBaseStatioMarkers("CID")
+                next_color = 0
+                Log.d("ADebugTag", "Nothing selectied");
+                color_map.clear()
+                color_method = "CID"
+                showBaseStatioMarkers(color_method)
             }
         }
 
@@ -94,7 +101,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         locationViewModel.allCellWithLocations.observe(this, Observer { allCells ->
             // Update the list of markers
             Log.d("ADebugTag", "Finding each location");
-            allCells?.let { showBaseStatioMarkers("CID") }
+            allCells?.let { showBaseStatioMarkers(color_method) }
         })
     }
 
@@ -128,6 +135,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             val y = mutableEntry.value.get(index).location.longitude
             val pos = LatLng(x, y)
             val color = getColorz(index,mutableEntry.value.get(index).cell,coloring_method)
+
             val snip = "Cell: $cid"
 
             val marker = mMap.addMarker(MarkerOptions().icon(
@@ -156,7 +164,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (coloring_method == "CID"){
             param = cell.cid.toInt()
         }
-        if(coloring_method == "Cell Type"){
+        else if(coloring_method == "Cell Type"){
             val cell_type = cell.cellType
             if(cell_type == "GSM"){//blue
                 return BitmapDescriptorFactory.HUE_BLUE
@@ -184,6 +192,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             param = cell.arfcn.toInt()
         }
         var cur_color = 0
+        Log.d("ADebugTag", "param is ..." + param.toString() + coloring_method);
         if (color_map.containsKey(param)){
             cur_color = color_map[param]!!
 
