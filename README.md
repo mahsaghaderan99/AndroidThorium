@@ -2,10 +2,17 @@
 ## Trace model network informaion on your trip
 
 Android Base Project using Android version 10 and SDK 30(min 28)
-Home page View
-![alt text](images/home.jpg)
-Map page View
-![alt text](images/map.jpg)
+
+## Preview
+
+### Home View
+<br/><br/>
+<img src="images/home.jpg" alt="home prev" width="200"/>
+
+
+### Map View
+<br/><br/>
+<img src="images/map.jpg" alt="map prev" width="200"/>
 
 ## Our Team:
 - Ahmadreza Sanatjou(a.reza.sanatjoo@gmail.com)
