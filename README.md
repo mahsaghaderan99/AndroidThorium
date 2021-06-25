@@ -3,9 +3,14 @@
 
 Android Base Project using Android version 10 and SDK 30(min 28)
 Home page View
-![alt text](image/home.jpg)
+![alt text](images/home.jpg)
 Map page View
-![alt text](image/map.jpg)
+![alt text](images/map.jpg)
+
+## Our Team:
+- Ahmadreza Sanatjou(a.reza.sanatjoo@gmail.com)
+- Mahsa Ghaderan(mahsa.ghaderan@gmail.com)
+
 ## Features
 
 - Trace Cell ID, Cell type, PLMN, LAC/TAC, ARFCN/eARFCN/,
