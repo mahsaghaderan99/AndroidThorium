@@ -5,17 +5,21 @@ import com.example.thorium_android.entities.Cell
 import com.example.thorium_android.entities.LocData
 import com.example.thorium_android.entities.LocationDao
 import com.example.thorium_android.entities.relations.CellWithLocations
+import java.util.*
+import kotlin.collections.HashMap
 
 class LocationRepository(private val locationDao: LocationDao) {
 
-    val allLocations: LiveData<List<LocData>> = locationDao.getAllLocations()
+    var allLocations: LiveData<List<LocData>> = locationDao.getAllLocations()
+    var allCells: LiveData<List<Cell>> = locationDao.getAllCells()
+    var allCellWithLocations: LiveData<List<CellWithLocations>> = locationDao.getAllCellWithLocations()
 
-    suspend fun getCellByCid(cid: Int): LiveData<List<Cell>>
+    fun getCellByCid(cid: String): LiveData<List<Cell>>
     {
         return locationDao.getCellByCid(cid)
     }
 
-    suspend fun getCellWithLocations(cid: Int): LiveData<List<CellWithLocations>>
+    fun getCellWithLocations(cid: String): LiveData<List<CellWithLocations>>
     {
         return locationDao.getCellWithLocations(cid)
     }

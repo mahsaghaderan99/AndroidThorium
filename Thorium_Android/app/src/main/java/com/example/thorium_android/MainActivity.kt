@@ -20,6 +20,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.thorium_android.entities.Cell
 import com.example.thorium_android.entities.LocData
 import com.example.thorium_android.view_models.LocationViewModel
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         val trace_bottun = findViewById<Button>(R.id.button_trace)
         val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         trace_bottun.setOnClickListener {
+            it.findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             Dexter.withContext(this)
                     .withPermissions(
                             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -160,10 +163,17 @@ class MainActivity : AppCompatActivity() {
             {
 //                Log.d("ADebugTag", "longitude Value: " + current_location!!.longitude);
 //                Log.d("ADebugTag", "latitude Value: " + current_location!!.latitude);
-                val cellData = Cell(cid, lac, "-", mcc, mnc, cell_type)
+                val cellData = Cell(
+                    cid = cid,
+                    lac_tac =  lac,
+                    mcc =  mcc,
+                    mnc =  mnc,
+                    arfcn = arfcn,
+                    cellType =  cell_type)
                 val location = LocData(
-                    lat = current_location!!.latitude,
-                    long = current_location!!.longitude,
+                    id = null,
+                    latitude = current_location!!.latitude,
+                    longitude = current_location!!.longitude,
                     cellId = cellData.cid,
                     time = System.currentTimeMillis(),
                 )
@@ -171,6 +181,7 @@ class MainActivity : AppCompatActivity() {
                 locationViewModel.addLocation(location)
 
             }
+
         }
 //        Log.d("ADebugTag", "cid Value: " + cid);
 //        Log.d("ADebugTag", "mcc Value: " + mcc);

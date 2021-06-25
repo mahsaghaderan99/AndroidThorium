@@ -9,8 +9,8 @@ import androidx.room.PrimaryKey
 data class LocData(
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
 
-    val lat: Double,
-    val long:Double,
+    val latitude: Double,
+    val longitude:Double,
     val time: Long,
     val cellId: String
 )

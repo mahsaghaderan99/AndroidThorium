@@ -14,15 +14,23 @@ interface LocationDao {
     suspend fun insertCell(cell: Cell)
 
     @Transaction
-    @Query("SELECT * FROM cell WHERE cid = :cid")
-    suspend fun getCellWithLocations(cid: Int): LiveData<List<CellWithLocations>>
+    @Query("SELECT * FROM Cell WHERE cid = :cid")
+    fun getCellWithLocations(cid: String): LiveData<List<CellWithLocations>>
 
     @Transaction
-    @Query("SELECT * FROM cell WHERE cid = :cid")
-    suspend fun getCellByCid(cid: Int): LiveData<List<Cell>>
+    @Query("SELECT * FROM Cell")
+    fun getAllCellWithLocations(): LiveData<List<CellWithLocations>>
 
     @Transaction
-    @Query("SELECT * FROM location ORDER BY id ASC")
+    @Query("SELECT * FROM Cell WHERE cid = :cid")
+    fun getCellByCid(cid: String): LiveData<List<Cell>>
+
+    @Transaction
+    @Query("SELECT * FROM Cell ORDER BY cid ASC")
+    fun getAllCells(): LiveData<List<Cell>>
+
+    @Transaction
+    @Query("SELECT * FROM LocData ORDER BY id ASC")
     fun getAllLocations(): LiveData<List<LocData>>
 
 

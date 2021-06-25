@@ -10,8 +10,8 @@ data class Cell(
 
     @PrimaryKey(autoGenerate = false) val cid: String,
     val lac_tac: String,
-    val rac: String,
     val mcc: String,
     val mnc: String,
+    val arfcn: String,
     val cellType: String,
 )
