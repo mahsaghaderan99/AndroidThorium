@@ -34,4 +34,9 @@ class LocationRepository(private val locationDao: LocationDao) {
         locationDao.insertCell(cell)
     }
 
+    fun removeCell(cid: String)
+    {
+        locationDao.removeCellByCid(cid)
+    }
+
 }

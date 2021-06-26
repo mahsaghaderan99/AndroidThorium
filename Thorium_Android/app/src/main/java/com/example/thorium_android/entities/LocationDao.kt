@@ -26,6 +26,11 @@ interface LocationDao {
     fun getCellByCid(cid: String): LiveData<List<Cell>>
 
     @Transaction
+    @Query("DELETE FROM Cell WHERE cid = :cid")
+    fun removeCellByCid(cid: String)
+
+
+    @Transaction
     @Query("SELECT * FROM Cell ORDER BY cid ASC")
     fun getAllCells(): LiveData<List<Cell>>
 

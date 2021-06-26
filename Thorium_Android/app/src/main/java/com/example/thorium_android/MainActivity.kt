@@ -8,31 +8,30 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import android.os.Handler
 import android.os.Looper
 import android.telephony.*
 import android.util.Log
-import com.google.android.gms.location.*
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.thorium_android.entities.Cell
 import com.example.thorium_android.entities.LocData
 import com.example.thorium_android.view_models.LocationViewModel
-
+import com.google.android.gms.location.*
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,29 +58,29 @@ class MainActivity : AppCompatActivity() {
         val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         Dexter.withContext(this)
                 .withPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 ).withListener(object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
 
-                        val mainHandler = Handler(Looper.getMainLooper())
+                    val mainHandler = Handler(Looper.getMainLooper())
 //
-                        mainHandler.post(object : Runnable {
-                            override fun run() {
-                                getCellInfo(tm)
-                                mainHandler.postDelayed(this, scan_delay)
-                            }
-                        })
-                    }
+                    mainHandler.post(object : Runnable {
+                        override fun run() {
+                            getCellInfo(tm)
+                            mainHandler.postDelayed(this, scan_delay)
+                        }
+                    })
+                }
 
-                    override fun onPermissionRationaleShouldBeShown(
-                            permissions: List<PermissionRequest?>?,
-                            token: PermissionToken?
-                    ) {
-                    }
-                }).check()
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: List<PermissionRequest?>?,
+                    token: PermissionToken?
+                ) {
+                }
+            }).check()
 
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -115,8 +114,6 @@ class MainActivity : AppCompatActivity() {
         var cell_type: String = ""
 
         val infos = tm.allCellInfo
-        Log.d("myTag", "Access all info");
-
 
         if (infos.size == 0){
             Log.d("myTag", "No signal");
@@ -159,17 +156,18 @@ class MainActivity : AppCompatActivity() {
         }
         finally {
             requestNewLocationData()
-            if (current_location != null)
+            if (current_location != null )
             {
 //                Log.d("ADebugTag", "longitude Value: " + current_location!!.longitude);
 //                Log.d("ADebugTag", "latitude Value: " + current_location!!.latitude);
                 val cellData = Cell(
                     cid = cid,
-                    lac_tac =  lac,
-                    mcc =  mcc,
-                    mnc =  mnc,
+                    lac_tac = lac,
+                    mcc = mcc,
+                    mnc = mnc,
                     arfcn = arfcn,
-                    cellType =  cell_type)
+                    cellType = cell_type
+                )
                 val location = LocData(
                     id = null,
                     latitude = current_location!!.latitude,
@@ -177,8 +175,36 @@ class MainActivity : AppCompatActivity() {
                     cellId = cellData.cid,
                     time = System.currentTimeMillis(),
                 )
-                locationViewModel.addCell(cellData)
-                locationViewModel.addLocation(location)
+                var checked : Boolean = false
+                var dist_constraint : Boolean = false
+                locationViewModel.allLocations.observe(this, Observer { locations ->
+                    // Update the list of markers
+                    Log.d("ADebugTag", "Finding each location");
+                    locations?.let {
+                        if (locations != null) {
+
+                            checked = true
+                            val distances = floatArrayOf(.1f)
+                            for (oldlocation in locations.iterator()) {
+                                Location.distanceBetween(
+                                    oldlocation.latitude, oldlocation.longitude,
+                                    location.latitude, location.longitude, distances
+                                );
+                            }
+                            Log.d("ADebugTag", "distance location! " + distances[0].toString());
+                            if (distances[0] < 3) {
+                                Log.d("ADebugTag", "Dont add new locatiob " + distances[0].toString());
+                                dist_constraint = true
+                            }
+                        }
+                    }
+                })
+                if (checked == false || dist_constraint == false){
+                    Log.d("ADebugTag", "Location added");
+                    locationViewModel.addCell(cellData)
+                    locationViewModel.addLocation(location)
+                }
+
 
             }
 
@@ -193,30 +219,20 @@ class MainActivity : AppCompatActivity() {
     }
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
-
-
-
         val mLocationRequest = LocationRequest()
-        Log.d("ADebugTag", "After location Requesr");
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest.interval = 0
         mLocationRequest.fastestInterval = 0
         mLocationRequest.numUpdates = 1
-        Log.d("ADebugTag", "Set loc params");
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        Log.d("ADebugTag", "Fused serices");
         fusedLocationClient.requestLocationUpdates(
             mLocationRequest, mLocationCallback, Looper.myLooper()
         )
-
-        Log.d("ADebugTag", "AfterFused serices");
     }
 
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val mLastLocation: Location = locationResult.lastLocation
-            Log.d("ADebugTag", "In location callbacks");
             current_location = mLastLocation
         }
     }
@@ -228,7 +244,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    fun showMap(view : View) {
+    fun showMap(view: View) {
         val intent = Intent(this, MapActivity::class.java)
         startActivity(intent)
 

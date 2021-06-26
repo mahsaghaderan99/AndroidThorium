@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.thorium_android.entities.Cell
 import com.example.thorium_android.entities.LocData
+import com.example.thorium_android.entities.relations.CellWithLocations
 import com.example.thorium_android.view_models.LocationViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -51,16 +52,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 next_color = 0
                 color_map.clear()
                 color_method = spinner.selectedItem.toString()
-                Log.d("ADebugTag", "spinner.selectedItem.toString()");
-                showBaseStatioMarkers(color_method)
+                updateMarkers()
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 next_color = 0
-                Log.d("ADebugTag", "Nothing selectied");
                 color_map.clear()
                 color_method = "CID"
-                showBaseStatioMarkers(color_method)
+                updateMarkers()
+
             }
         }
 
@@ -96,63 +97,96 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 info.addView(snippet)
                 return info
             }
+            
         })
-        Log.d("ADebugTag", "Before find all location");
-
         locationViewModel.allCellWithLocations.observe(this, Observer { allCells ->
             // Update the list of markers
-            Log.d("ADebugTag", "Finding each location");
-            allCells?.let { showBaseStatioMarkers(color_method) }
+            allCells?.let { showAllStatioMarkers(allCells, color_method) }
+        })
+
+
+    }
+
+    fun updateMarkers(){
+        locationViewModel.allCellWithLocations.observe(this, Observer { allCells ->
+            // Update the list of markers
+            allCells?.let { showBaseStatioMarkers(allCells, color_method) }
         })
     }
 
-    fun showBaseStatioMarkers(coloring_method: String) {
+    fun showAllStatioMarkers(allCells: List<CellWithLocations>, coloring_method: String) {
 
         for(marker in activeMarkers) {
             marker.remove()
         }
 
-        val allData = locationViewModel.allCellWithLocations.value
-        val cellMap = mutableMapOf<String,  MutableList<NetCell>>()
-        if (allData != null) {
-            for (data in allData.iterator()) {
+        val cellMap = ArrayList<NetCell>()
+        if (allCells != null) {
+            for (data in allCells.iterator()) {
                 val locations = data.locData
                 for (location in locations) {
-                    if (cellMap.containsKey(data.cell.cid)){
-                        //Measurement(data.strength.toDouble(), data.altitude, data.longitude)
-                        cellMap[data.cell.cid]!!.add(NetCell(data.cell,location))
-
-                    } else {
-                        cellMap.put(data.cell.cid, mutableListOf())
-                        cellMap[data.cell.cid]!!.add(NetCell(data.cell,location))
-                    }
+                        cellMap.add(NetCell(data.cell,location))
                 }
             }
         }
 
-        cellMap.entries.forEachIndexed { index, mutableEntry ->
-            val cid: Double = mutableEntry.key.toDouble()
-            val x = mutableEntry.value.get(index).location.latitude
-            val y = mutableEntry.value.get(index).location.longitude
+        cellMap.forEachIndexed { index, thecell ->
+            val cid: Double = thecell.cell.cid.toDouble()
+            val x = thecell.location.latitude
+            val y = thecell.location.longitude
             val pos = LatLng(x, y)
-            val color = getColorz(index,mutableEntry.value.get(index).cell,coloring_method)
-            val thecell = mutableEntry.value.get(index)
+            val color = getColorz(thecell.cell,coloring_method)
             val plmn = thecell.cell.mcc + thecell.cell.mnc
             val lac = thecell.cell.lac_tac
             val celtype = thecell.cell.cellType
 
             val snip = "$celtype \n Cell: $cid \n PLMN $plmn \n LAC $lac"
-            Log.d("ADebugTag", "Befor new point adding");
             val marker = mMap.addMarker(MarkerOptions().icon(
-                    BitmapDescriptorFactory.defaultMarker(color)).position(
-                    pos).title(cid.toString()).snippet(snip))
-            Log.d("ADebugTag", "After marker adding");
+                BitmapDescriptorFactory.defaultMarker(color)).position(
+                pos).title(cid.toString()).snippet(snip))
             activeMarkers.add(marker)
-            Log.d("ADebugTag", "After new point adding");
         }
     }
 
-    fun getColorz(index: Int, cell: Cell, coloring_method: String): Float {
+    fun showBaseStatioMarkers(allCells: List<CellWithLocations>, coloring_method: String) {
+
+//        for(marker in activeMarkers) {
+//            marker.remove()
+//        }
+
+        var time = 0
+        lateinit var the_cell : NetCell
+        if (allCells != null) {
+            for (data in allCells.iterator()) {
+                val locations = data.locData
+                for (location in locations) {
+                    if (location.time > time)
+                    {
+                        the_cell = NetCell(data.cell,location)
+                        time = location.time.toInt()
+                    }
+                }
+            }
+        }
+
+        val cid: Double = the_cell.cell.cid.toDouble()
+        val x = the_cell.location.latitude
+        val y = the_cell.location.longitude
+        val pos = LatLng(x, y)
+        val color = getColorz(the_cell.cell,coloring_method)
+        val plmn = the_cell.cell.mcc + the_cell .cell.mnc
+        val lac = the_cell.cell.lac_tac
+        val celtype = the_cell.cell.cellType
+
+        val snip = "$celtype \n Cell: $cid \n PLMN $plmn \n LAC $lac"
+        val marker = mMap.addMarker(MarkerOptions().icon(
+            BitmapDescriptorFactory.defaultMarker(color)).position(
+            pos).title(cid.toString()).snippet(snip))
+        activeMarkers.add(marker)
+        Log.d("ADebugTag", "After new point adding");
+    }
+
+    fun getColorz(cell: Cell, coloring_method: String): Float {
         val colors = listOf(
                 BitmapDescriptorFactory.HUE_AZURE,
                 BitmapDescriptorFactory.HUE_GREEN,
@@ -198,7 +232,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
             param = cell.arfcn.toInt()
         }
         var cur_color = 0
-        Log.d("ADebugTag", "param is ..." + param.toString() + coloring_method);
         if (color_map.containsKey(param)){
             cur_color = color_map[param]!!
 
