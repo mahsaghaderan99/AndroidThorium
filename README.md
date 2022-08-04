@@ -1,7 +1,16 @@
 # Thorium_Android
 ## Trace model network informaion on your trip
+This android application trace network information during your trip; including: 
+- Latitude and Longitude
+- Cell ID
+- Cell Type
+- MCC
+- MNC
+- LAC/ TAC
+- PLMN
 
-Android Base Project using Android version 10 and SDK 30(min 28)
+
+Android version 10 and SDK 30(min 28)
 
 ## Preview
 
